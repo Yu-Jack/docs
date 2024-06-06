@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: |
-          npm install -g yarn
-          yarn install --frozen-lockfile
+      # - name: Install dependencies
+      #   run: |
+      #     npm install -g yarn
+      #     yarn install --frozen-lockfile
 
-      - name: Ignore OpenAPI
-        run: |
-          ./scripts/ignore-openapi
+      # - name: Ignore OpenAPI
+      #   run: |
+      #     ./scripts/ignore-openapi
 
       - name: Build
         env:
