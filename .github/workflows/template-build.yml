@@ -12,9 +12,6 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write 
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -59,8 +56,3 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/
-
-      - name: Release to GitHub Pages
-        if: ${{ inputs.preview == false && inputs.release == true }}
-        id: deployment
-        uses: actions/deploy-pages@v4
