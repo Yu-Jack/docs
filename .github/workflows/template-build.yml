@@ -42,11 +42,6 @@ jobs:
         run: |
           yarn gen-api-docs
           yarn build
-
-      - name: Package build
-        if: ${{ inputs.preview == true && inputs.release == false}}
-        run: |
-          zip -q -r build.zip build/
       
       - name: Deploy to Netlify
         if: ${{ inputs.preview == true && inputs.release == false }}
@@ -58,8 +53,15 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      
+      - name: Upload artifact
+        if: ${{ inputs.preview == false && inputs.release == true }}
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/
 
       - name: Release to GitHub Pages
         if: ${{ inputs.preview == false && inputs.release == true }}
         id: deployment
-        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+        uses: actions/deploy-pages@v4
