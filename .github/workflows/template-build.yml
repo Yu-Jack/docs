@@ -9,7 +9,6 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,14 +44,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           publish-dir: build
           production-deploy: false
-          deploy-message: "Deploy from GitHub Actions"
+          deploy-message: Deploy from ${{ github.event.pull_request.title }})
           enable-pull-request-comment: true
           enable-commit-comment: true
           enable-commit-status: true
           overwrites-pull-request-comment: true
-          enable-github-deployment: true
-          github-deployment-environment: true
-          github-deployment-description: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
