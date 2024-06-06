@@ -9,8 +9,7 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
+    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
