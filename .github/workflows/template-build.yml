@@ -1,0 +1,65 @@
+on:
+  workflow_call:
+    inputs:
+      release:
+        required: true
+        type: boolean
+      preview:
+        required: true
+        type: boolean
+
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write 
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm install -g yarn
+          yarn install --frozen-lockfile
+
+      - name: Ignore OpenAPI
+        run: |
+          ./scripts/ignore-openapi
+
+      - name: Build
+        env:
+          NODE_OPTIONS: "--max_old_space_size=7168"
+        run: |
+          yarn gen-api-docs
+          yarn build
+
+      - name: Package build
+        if: ${{ inputs.preview == true && inputs.release == false}}
+        run: |
+          zip -q -r build.zip build/
+      
+      - name: Deploy to Netlify
+        if: ${{ inputs.preview == true && inputs.release == false }}
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: build
+          production-deploy: true
+          deploy-message: "Deploy from GitHub Actions"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Release to GitHub Pages
+        if: ${{ inputs.preview == false && inputs.release == true }}
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action

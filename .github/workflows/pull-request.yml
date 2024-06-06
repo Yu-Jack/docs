@@ -1,0 +1,12 @@
+name: Pull Request Preview
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    uses: ./.github/workflows/template-build.yml
+    with:
+      release: false
+      preview: true
+    secrets: inherit
