@@ -21,21 +21,23 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: |
-          npm install -g yarn
-          yarn install --frozen-lockfile
+      # - name: Install dependencies
+      #   run: |
+      #     npm install -g yarn
+      #     yarn install --frozen-lockfile
 
-      - name: Ignore OpenAPI
-        run: |
-          ./scripts/ignore-openapi
+      # - name: Ignore OpenAPI
+      #   run: |
+      #     ./scripts/ignore-openapi
 
       - name: Build
         env:
           NODE_OPTIONS: "--max_old_space_size=7168"
         run: |
-          yarn gen-api-docs
-          yarn build
+          mkdir build
+          echo "ai" > build/index.htm
+          # yarn gen-api-docs
+          # yarn build
       
       - name: Deploy to Netlify
         if: ${{ inputs.preview == true && inputs.release == false }}
@@ -44,6 +46,10 @@ jobs:
           publish-dir: build
           production-deploy: true
           deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          enable-commit-status: true
+          overwrites-pull-request-comment: tru
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
