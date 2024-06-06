@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 18
 
-      # - name: Install dependencies
-      #   run: |
-      #     npm install -g yarn
-      #     yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: |
+          npm install -g yarn
+          yarn install --frozen-lockfile
 
-      # - name: Ignore OpenAPI
-      #   run: |
-      #     ./scripts/ignore-openapi
+      - name: Ignore OpenAPI
+        run: |
+          ./scripts/ignore-openapi
 
       - name: Build
         env:
@@ -50,30 +50,13 @@ jobs:
           enable-commit-comment: true
           enable-commit-status: true
           overwrites-pull-request-comment: true
+          enable-github-deployment: true
+          github-deployment-environment: true
+          github-deployment-description: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-      # - name: Find the comment
-      #   if: ${{ inputs.production != true }}
-      #   uses: peter-evans/find-comment@v3
-      #   id: fc
-      #   with:
-      #     issue-number: ${{ github.event.pull_request.number }}
-      #     comment-author: 'github-actions[bot]'
-      #     body-includes: Netlify Preview Deployment Information
-
-      # - name: Create or update comment
-      #   if: ${{ inputs.production != true }}
-      #   uses: peter-evans/create-or-update-comment@v4
-      #   with:
-      #     comment-id: ${{ steps.fc.outputs.comment-id }}
-      #     issue-number: ${{ github.event.pull_request.number }}
-      #     body: |
-      #       Netlify Preview Deployment Information
-      #       - Preview URL: ${{ steps.netlify.outputs.deploy-url }}
-      #     edit-mode: replace
-      
+    
       - name: Upload artifact
         if: ${{ inputs.production == true }}
         uses: actions/upload-pages-artifact@v3
