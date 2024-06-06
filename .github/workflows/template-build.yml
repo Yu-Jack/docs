@@ -44,7 +44,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           publish-dir: build
           production-deploy: false
-          deploy-message: Deploy from ${{ github.event.pull_request.title }})
+          deploy-message: Deploy from ${{ github.event.pull_request.title }}
           enable-pull-request-comment: true
           enable-commit-comment: true
           enable-commit-status: true
