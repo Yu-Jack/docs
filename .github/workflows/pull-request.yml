@@ -7,6 +7,5 @@ jobs:
   build:
     uses: ./.github/workflows/template-build.yml
     with:
-      release: false
-      preview: true
+      production: false
     secrets: inherit
