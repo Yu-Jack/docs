@@ -1,10 +1,7 @@
 on:
   workflow_call:
     inputs:
-      release:
-        required: true
-        type: boolean
-      preview:
+      production:
         required: true
         type: boolean
 
@@ -40,22 +37,39 @@ jobs:
           # yarn build
       
       - name: Deploy to Netlify
-        if: ${{ inputs.preview == true && inputs.release == false }}
+        id: netlify
+        if: ${{ inputs.production != true }}
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: build
           production-deploy: true
           deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: true
-          enable-commit-comment: true
-          enable-commit-status: true
-          overwrites-pull-request-comment: tru
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Find the comment
+        if: ${{ inputs.production != true }}
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Netlify Preview Deployment Information
+
+      - name: Create or update comment
+        if: ${{ inputs.production != true }}
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Netlify Preview Deployment Information
+            - Preview URL: ${{ steps.netlify.outputs.deploy-url }}
+          edit-mode: replace
       
       - name: Upload artifact
-        if: ${{ inputs.preview == false && inputs.release == true }}
+        if: ${{ inputs.production == true }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/
