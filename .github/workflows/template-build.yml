@@ -9,6 +9,8 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,25 +50,25 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      - name: Find the comment
-        if: ${{ inputs.production != true }}
-        uses: peter-evans/find-comment@v3
-        id: fc
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Netlify Preview Deployment Information
+      # - name: Find the comment
+      #   if: ${{ inputs.production != true }}
+      #   uses: peter-evans/find-comment@v3
+      #   id: fc
+      #   with:
+      #     issue-number: ${{ github.event.pull_request.number }}
+      #     comment-author: 'github-actions[bot]'
+      #     body-includes: Netlify Preview Deployment Information
 
-      - name: Create or update comment
-        if: ${{ inputs.production != true }}
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            Netlify Preview Deployment Information
-            - Preview URL: ${{ steps.netlify.outputs.deploy-url }}
-          edit-mode: replace
+      # - name: Create or update comment
+      #   if: ${{ inputs.production != true }}
+      #   uses: peter-evans/create-or-update-comment@v4
+      #   with:
+      #     comment-id: ${{ steps.fc.outputs.comment-id }}
+      #     issue-number: ${{ github.event.pull_request.number }}
+      #     body: |
+      #       Netlify Preview Deployment Information
+      #       - Preview URL: ${{ steps.netlify.outputs.deploy-url }}
+      #     edit-mode: replace
       
       - name: Upload artifact
         if: ${{ inputs.production == true }}
