@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: build
-      run:
+      run: |
         mkdir -p build
         echo "Hello, World!" > build/index.html
 
