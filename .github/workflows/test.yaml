@@ -2,6 +2,15 @@ name: Testing
 
 on: 
   workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: 'pull_request_number'
+        required: true
+        type: number
+      pull_request_title:
+        description: 'pull_request_title'
+        type: string
+        required: true
   pull_request:
 
 jobs:
