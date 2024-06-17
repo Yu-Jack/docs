@@ -51,7 +51,7 @@ jobs:
           const commentIdentifier = "<!-- deploy-comment -->";
           const body = `${commentIdentifier}\nDeployed successfully!\n\n**Deploy URL:** ${deployUrl}\n**Logs URL:** ${logsUrl}`;
 
-          const { data: comments } = await github.issues.listComments({
+          const { data: comments } = await github.rest.issues.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: pr_number,
@@ -60,14 +60,14 @@ jobs:
           const existingComment = comments.find(comment => comment.body.includes(commentIdentifier));
 
           if (existingComment) {
-            await github.issues.updateComment({
+            await github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               comment_id: existingComment.id,
               body: body,
             });
           } else {
-            await github.issues.createComment({
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pr_number,
