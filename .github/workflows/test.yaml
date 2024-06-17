@@ -32,7 +32,7 @@ jobs:
         npm install netlify-cli -g
         mkdir -p build
         echo "Hello, World!" > build/index.html
-        netlify deploy --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --dir ./build --json > deploy.json
+        netlify deploy --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --dir ./build --json > deploy_output.json
 
         DEPLOY_URL=$(jq -r '.deploy_url' deploy_output.json)
         LOGS_URL=$(jq -r '.logs' deploy_output.json)
@@ -45,7 +45,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const pr_number = `${{ inputs.pull_request_number }}`;  // 替换为实际的 PR 号
+          const pr_number = `${{ inputs.pull_request_number }}`;
           const deployUrl = `${{ needs.build.outputs.deploy_url }}`;
           const logsUrl = `${{ needs.build.outputs.logs }}`;
           const commentIdentifier = "<!-- deploy-comment -->";
