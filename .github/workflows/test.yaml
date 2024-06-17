@@ -6,10 +6,8 @@ on:
       pull_request_number:
         description: 'pull_request_number'
         required: true
-        type: number
       pull_request_title:
         description: 'pull_request_title'
-        type: string
         required: true
   pull_request:
 
@@ -35,7 +33,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         publish-dir: build
         production-deploy: false
-        deploy-message: Deploy from ${{ github.event.pull_request.title }}
+        deploy-message: Deploy from ${{ inputs.pull_request_title }}
         enable-pull-request-comment: true
         enable-commit-comment: false
         enable-commit-status: false
