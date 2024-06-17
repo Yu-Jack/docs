@@ -41,7 +41,7 @@ jobs:
         echo "::set-output name=logs::$LOGS_URL"
 
     - name: Add or Update PR comment
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
