@@ -46,8 +46,8 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const pr_number = `${{ inputs.pull_request_number }}`;
-          const deployUrl = `${{ needs.build.outputs.deploy_url }}`;
-          const logsUrl = `${{ needs.build.outputs.deploy_logs }}`;
+          const deployUrl = `${{ steps.build.outputs.deploy_url }}`;
+          const logsUrl = `${{ steps.build.outputs.deploy_logs }}`;
           const commentIdentifier = "<!-- deploy-comment -->";
           const body = `${commentIdentifier}\nDeployed successfully!\n\n**Deploy URL:** ${deployUrl}\n**Logs URL:** ${logsUrl}`;
 
