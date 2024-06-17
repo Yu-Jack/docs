@@ -37,8 +37,8 @@ jobs:
         DEPLOY_URL=$(jq -r '.deploy_url' deploy_output.json)
         LOGS_URL=$(jq -r '.logs' deploy_output.json)
 
-        echo "::set-output name=deploy_url::$DEPLOY_URL"
-        echo "::set-output name=logs::$LOGS_URL"
+        echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+        echo "deploy_logs=$LOGS_URL" >> $GITHUB_OUTPUT
 
     - name: Add or Update PR comment
       uses: actions/github-script@v7
@@ -47,7 +47,7 @@ jobs:
         script: |
           const pr_number = `${{ inputs.pull_request_number }}`;
           const deployUrl = `${{ needs.build.outputs.deploy_url }}`;
-          const logsUrl = `${{ needs.build.outputs.logs }}`;
+          const logsUrl = `${{ needs.build.outputs.deploy_logs }}`;
           const commentIdentifier = "<!-- deploy-comment -->";
           const body = `${commentIdentifier}\nDeployed successfully!\n\n**Deploy URL:** ${deployUrl}\n**Logs URL:** ${logsUrl}`;
 
