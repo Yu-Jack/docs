@@ -27,7 +27,9 @@
     "@docusaurus/plugin-content-pages": "^2.4.0",
     "@docusaurus/plugin-debug": "^2.4.0",
     "@docusaurus/preset-classic": "^2.4.0",
+    "@docusaurus/tsconfig": "^3.4.0",
     "@mdx-js/react": "^1.6.22",
+    "@swc/core": "^1.6.1",
     "clsx": "^1.1.1",
     "docs-to-pdf": "^0.6.2",
     "docusaurus-plugin-image-zoom": "^1.0.0",
@@ -38,7 +40,8 @@
     "react-dom": "^18.2.0",
     "remark-cli": "^11.0.0",
     "remark-lint-no-dead-urls": "^1.1.0",
-    "remark-validate-links": "^12.1.1"
+    "remark-validate-links": "^12.1.1",
+    "swc-loader": "^0.2.6"
   },
   "browserslist": {
     "production": [
@@ -51,5 +54,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "esbuild-loader": "^4.2.0"
   }
 }
