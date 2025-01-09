@@ -48,7 +48,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./build/${{ inputs.deployenv }}"
+          path: ./build
           
   release:
     runs-on: ubuntu-latest
