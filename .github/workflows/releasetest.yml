@@ -42,7 +42,8 @@ jobs:
       - name: test
         run: |
           mkdir -p "build/${{ inputs.deployenv }}"
-          echo "Hello, World! (${{ inputs.deployenv }})" > build/index.html
+          ls -al build
+          echo "Hello, World! (${{ inputs.deployenv }})" > "build/${{ inputs.deployenv }}/index.html"
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
@@ -57,7 +58,7 @@ jobs:
     needs: build
     environment:
       name: ${{ inputs.deployenv }}
-      url: "${{ steps.deployment.outputs.page_url }}/${{ inputs.deployenv }}"
+      url: "${{ steps.deployment.outputs.page_url }}${{ inputs.deployenv }}"
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
