@@ -41,7 +41,7 @@ jobs:
 
       - name: test
         run: |
-          mkdir -p "build/${{ inputs.deployenv }}
+          mkdir -p build
           echo "Hello, World! (${{ inputs.deployenv }})" > build/index.html
       - name: Upload static files as artifact
         id: deployment
