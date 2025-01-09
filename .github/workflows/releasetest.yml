@@ -12,33 +12,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
 
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      # - name: Set up Node.js 18
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 18
 
-      - name: Install dependencies
+      # - name: Install dependencies
+      #   run: |
+      #     npm install -g yarn
+      #     yarn install --frozen-lockfile
+
+      # - name: Ignore OpenAPI
+      #   run: |
+      #     ./scripts/ignore-openapi
+
+      # - name: Build
+      #   env:
+      #     NODE_OPTIONS: "--max_old_space_size=7168"
+      #   run: |
+      #     yarn gen-api-docs
+      #     yarn build
+
+      - name: test
         run: |
-          npm install -g yarn
-          yarn install --frozen-lockfile
-
-      - name: Ignore OpenAPI
-        run: |
-          ./scripts/ignore-openapi
-
-      - name: Build
-        env:
-          NODE_OPTIONS: "--max_old_space_size=7168"
-        run: |
-          yarn gen-api-docs
-          yarn build
-
+          mkdir -p build
+          echo "Hello, World! (${{ inputs.deployenv }})" > build/index.html
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
