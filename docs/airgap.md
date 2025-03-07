@@ -76,3 +76,88 @@ ssh rancher@<harvester-node-ip>
 sudo -i
 docker load -i /tmp/rancher-agent-<version>.tar
 ```
+
+## Harvester UI extension with Rancher Integration
+
+After Rancher v2.10.x, it's necessary to install Harvester UI extension to access Harvester Dashboard. However, in air gapped environment, installing Harvester UI with network is not available. Please follow below steps to install it in air gapped environment.
+
+
+1. Please pull `rancher/ui-plugin-catalog` image and push it to your private registry.
+
+2. Navigate to `Extension`, and click **⋮ > Manage Extension Catalogs**.
+
+  ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-01.png)
+
+3. Fill in the correct private registry URL and image repository. 
+
+  ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-02.png)
+
+  If your registry requires the username/password, please remember to create secret in `cattle-ui-plugin-system` namespace with `kubernetes.io/dockercfg` or `kubernetes.io/dockerconfigjson` type.
+
+  ```yaml
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: my-registry-secret-rancher
+    namespace: cattle-ui-plugin-system
+  type: kubernetes.io/dockerconfigjson
+  data:
+    .dockerconfigjson: {base64 encoded data}
+  ```
+
+4. Wait for few minutes to finish the initilation.
+
+  ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-03.png)
+
+5. After that, there are many different UI extensions you could install.
+
+  ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-04.png)
+
+6. Select Harvester to click `install` button to install latest ui extension.
+
+  ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-05.png)
+
+   ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-06.png) 
+
+7. Navigate to `Virtualization Management` screen to import Harvester cluster and access its dashboard.
+
+  ![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-07.png)
+
+
+## Trouble Shotting
+
+### UI Extensions don't show up
+
+Please navigate to repository screen to click `Refresh` button
+
+![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-04-01.png)
+
+![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-04-02.png)
+
+![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-04-03.png)
+
+![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-04-04.png)
+
+### Failed to install UI extensions
+  
+If you run into the failed installation  error message, please check the `uiplugins` resource.
+
+![](/img/v1.5/air-gapped/air-gappted-harvester-ui-extension-05-01.png)
+
+```
+bash-4.4# k get uiplugins -A
+NAMESPACE                 NAME        PLUGIN NAME   VERSION   STATE
+cattle-ui-plugin-system   harvester   harvester     1.0.3     pending
+bash-4.4# k get uiplugins harvester --namespace cattle-ui-plugin-system -o yaml
+apiVersion: catalog.cattle.io/v1
+kind: UIPlugin
+metadata:
+  # skip
+  name: harvester
+  namespace: cattle-ui-plugin-system
+spec:
+  plugin:
+    endpoint: http://ui-plugin-catalog-svc.cattle-ui-plugin-system:8080/plugin/harvester-1.0.3
+```
+
+Since we use `svc.namespace` as endpoint, please make sure this endpoint is accessible from Rancher. If not, please try to use cluster ip directly like `10.43.33.58:8080/plugin/harvester-1.0.3`.
